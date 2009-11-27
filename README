@@ -1,4 +1,4 @@
-cats is a serial port cat lilke utility.
+cats is a serial port cat like utility.
 
 Please issue 'make doc' and see doc/index.html
 or just 'make' and ./cats.h
