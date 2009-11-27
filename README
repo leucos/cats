@@ -1,0 +1,6 @@
+cats is a serial port cat lilke utility.
+
+Please issue 'make doc' and see doc/index.html
+or just 'make' and ./cats.h
+
+See the GitHub wiki for more info.
