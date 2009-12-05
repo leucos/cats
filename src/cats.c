@@ -117,11 +117,15 @@ serialInitPort(int fd, int baudrate)
 	tcgetattr(fd, &options);
 
 	/* Set the baud rates to BAUDRATE */
-  if (cfsetispeed(&options, baudrate) == -1)
-    debug(LOG_WARNING,"cfsetispeed error ");
+  if (cfsetispeed(&options, baudrate) == -1) {
+    debug(LOG_WARNING,"cfsetispeed error for baudrate %d", baudrate);
+		return FALSE;
+	}
 
-	if (cfsetospeed(&options, baudrate))
-    debug(LOG_WARNING,"cfsetospeed error ");
+	if (cfsetospeed(&options, baudrate)) {
+    debug(LOG_WARNING,"cfsetospeed error for baudrate %d", baudrate);
+		return FALSE;
+	}
 
   /* 8N1 */
   options.c_cflag &= ~PARENB;
@@ -207,7 +211,7 @@ serialOpen(const char *port, int baudrate) {
 	default: printf("Error : unsupported baud rate"); exit(EXIT_FAILURE);
 	}
 
-	serialInitPort(fd, baudrate);
+	serialInitPort(fd, baud_sym);
 
   debug(LOG_INFO,"Baudrate set successfuly to %d", baudrate);
 
