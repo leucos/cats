@@ -2,11 +2,12 @@
 # For lazy guys, really...
 #
 
+CFLAGS= -Wall
 
 .PHONY: doc
 
 all:
-	gcc src/cats.c -o cats
+	gcc $(CFLAGS) src/cats.c -o cats
 
 doc:
 	doxygen doc/Doxyfile
