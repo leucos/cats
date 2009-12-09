@@ -211,6 +211,18 @@ serialOpen(const char *port, int baudrate) {
 	case 57600: baud_sym = B57600; break;
 	case 115200: baud_sym = B115200; break;
 	case 230400: baud_sym = B230400; break;
+	case 460800: baud_sym =  B460800; break;
+	case 500000: baud_sym =  B500000; break;
+	case 576000: baud_sym =  B576000; break;
+	case 921600: baud_sym =  B921600; break;
+	case 1000000: baud_sym =  B1000000; break;
+	case 1152000: baud_sym =  B1152000; break;
+	case 1500000: baud_sym =  B1500000; break;
+	case 2000000: baud_sym =  B2000000; break;
+	case 2500000: baud_sym =  B2500000; break;
+	case 3000000: baud_sym =  B3000000; break;
+	case 3500000: baud_sym =  B3500000; break;
+	case 4000000: baud_sym =  B4000000; break;
 	default: printf("Error : unsupported baud rate"); exit(EXIT_FAILURE);
 	}
 
@@ -240,8 +252,10 @@ usage(void)
   fprintf(stderr, "\t-t : write timestamp in front on each line\n");
   fprintf(stderr, "\t-g <0-7> : debug level (default : no debug, see sys/syslog.h for levels)\n");
   fprintf(stderr, "\n  Supported baud rates :\n");
-	fprintf(stderr, "\t\t50 75 110 134 150 200 300 600 1200 1800\n");
+  fprintf(stderr, "\t\t50 75 110 134 150 200 300 600 1200 1800\n");
   fprintf(stderr, "\t\t2400 4800 9600 19200 38400 57600 115200 230400\n");
+  fprintf(stderr, "\t\t230400 460800 500000 576000 921600 1000000 1152000 1500000\n");
+  fprintf(stderr, "\t\t2000000 2500000 3000000 3500000 4000000\n");
   fprintf(stderr, "\n  Example : cats -g7 -b19200 /dev/ttyUSB0\n");
 
   fprintf(stderr,"\n");
@@ -436,8 +450,8 @@ dependencies.
  * -g <0-7> : debug level (default : no debug, see sys/syslog.h for levels)
  *
  * The list of supported baud rates is rather extensive, but mignt not cover all cases. For instance, playing with MIDI (31250) is not supported for now, but since MIDI is a binary protocol, it's not a problem right now.
- *	50 75 110 134 150 200 300 600 1200 1800
- *  2400 4800 9600 19200 38400 57600 115200 230400
+ *	50 75 110 134 150 200 300 600 1200 1800 2400 4800 9600 19200 38400 57600 115200 230400
+ *	230400 460800 500000 576000 921600 1000000 1152000 1500000 2000000 2500000 3000000 3500000 4000000
  *
  * @section usage Usage Exemples
  *
