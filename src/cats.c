@@ -236,6 +236,7 @@ usage()
   fprintf(stderr, "\t-h : this help\n");
   fprintf(stderr, "\t<port> : serial port (default : none\n");
   fprintf(stderr, "\t-b <rate> : serial baud rate (default : 9600)\n");
+  fprintf(stderr, "\t-t : write timestamp in front on each line\n");
   fprintf(stderr, "\t-g <0-7> : debug level (default : no debug, see sys/syslog.h for levels)\n");
   fprintf(stderr, "\n  Supported baud rates :\n");
 	fprintf(stderr, "\t\t50 75 110 134 150 200 300 600 1200 1800\n");
