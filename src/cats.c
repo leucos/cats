@@ -54,7 +54,9 @@
 #  endif
 #endif
 
-boolean_t oDebug = 2;
+int            oDebug = 0;
+boolean_t      oLineTimings = FALSE;
+struct timeval oStartTime;
 
 /**
  * @brief Prints messages to console according to severity.
@@ -244,6 +246,35 @@ usage()
 }
 
 /**
+ * @brief Compute elapsed
+ *
+ * computes time elapsed between now and and a timevazl argument passed
+ *
+ * @param starttime
+ *  The time to compare to now (should be in the past)
+ * @param result
+ *  A timeval struct where the result is put
+ *
+ */
+int
+elapsedFromStart (struct timeval *starttime, struct timeval *result) {
+
+	struct timeval now;
+	gettimeofday(&now, NULL);
+
+  result->tv_sec = now.tv_sec - starttime->tv_sec;
+	result->tv_usec = now.tv_usec - starttime->tv_usec;
+
+	if (result->tv_usec < 0) {
+		result->tv_sec -= 1;
+		result->tv_usec += 1000000;
+	}
+
+  /* Return 1 if result is negative. */
+  return now.tv_sec < starttime->tv_sec;
+}
+
+/**
  * @brief Never ending handling loop
  *
  * This never ending loop copies STDIN to Tx and Rx to STDOUT
@@ -259,16 +290,24 @@ void
 serialLoop(const char *serialPort, int baudRate) {
 	int            fd;
 	char           data[1024];
+	char           splitbuf[1024];
 	int            n;
 	int            nbytes;
 	int            max_fd;
 	fd_set         input;
 	struct timeval timeout;
+	boolean_t      linebreak = FALSE;
+	int            i;
+	int            bcount;
+	struct timeval elapsed;
+	struct timeval starttime;
 
 	fd = serialOpen(serialPort, baudRate);
 	
 	/* Initialize the input set */
 	FD_ZERO(&input);
+
+	gettimeofday(&starttime, NULL);
 
 	while (1) {
 		FD_SET(fileno(stdin), &input); // stdin
@@ -292,10 +331,20 @@ serialLoop(const char *serialPort, int baudRate) {
 		} else {
 			/* We have input */
 			if (FD_ISSET(fd, &input)) {
+
 				bzero(data,1024);
-				if (read(fd, data, 1024)) {
-					printf("%s", data);
-					fflush(stdout);
+				bzero(splitbuf,1024);
+
+				if (bcount = read(fd, data, 1024)) {
+					for (i=0; i < bcount; i++) {
+						if (linebreak && oLineTimings) {
+							elapsedFromStart(&starttime, &elapsed);
+							printf("[%ld.%06ld]", elapsed.tv_sec, elapsed.tv_usec);
+						}
+						linebreak = (data[i] == '\n' ? TRUE : FALSE);
+						printf("%c", data[i]);
+						fflush(stdout);
+					}
 				}
 			}
 			if (FD_ISSET(0, &input)) {
@@ -321,7 +370,7 @@ main(int argc, char **argv)
 	int  oSerialBaudRate = 0;
 
   /* thread stuff */
-  while ((c = getopt(argc, argv, "hg::b:")) != -1 ) {
+  while ((c = getopt(argc, argv, "hg::b:t")) != -1 ) {
 		debug(LOG_DEBUG, "handling option %c",c);
     switch (c) {
     case 'g':
@@ -329,6 +378,9 @@ main(int argc, char **argv)
       break;
     case 'b':
       oSerialBaudRate = atoi(optarg);
+      break;
+    case 't':
+      oLineTimings = TRUE;
       break;
     case '?':
       if (isprint (optopt))
@@ -352,7 +404,7 @@ main(int argc, char **argv)
 	if (!strstr(argv[argc-1],"/dev/tty")) {
 		debug(LOG_WARNING, "invalid serial port specified : %s", argv[argc-1]);
 	}
-
+	
 	serialLoop(argv[argc-1], oSerialBaudRate);
 
 	return 0;
