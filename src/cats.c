@@ -22,16 +22,18 @@
  * @sa cats.c
  */
 
-#include <stdio.h>
+#include <ctype.h>
+#include <fcntl.h> 
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <sys/stat.h>
 #include <syslog.h>
-#include <fcntl.h> 
-#include <termios.h>
+#include <sys/stat.h>
+#include <sys/time.h> 
 #include <sys/types.h>
+#include <termios.h>
 #include <unistd.h>
 
 #define VERSION 1.0
@@ -73,7 +75,6 @@ struct timeval oStartTime;
 static void 
 debug(int level, const char * template, ...)
 {
-  char buffer[1024];
   va_list ap;
 
   va_start (ap, template);
@@ -228,7 +229,7 @@ serialOpen(const char *port, int baudrate) {
  */
 
 void 
-usage()
+usage(void)
 {
   fprintf(stdout, "cats, version %.2f\n\n",VERSION);
   fprintf(stdout, "  Usage : cats [-h] [-g <0-7>] [-b <baud>]<port>\n\n");
@@ -336,7 +337,7 @@ serialLoop(const char *serialPort, int baudRate) {
 				bzero(data,1024);
 				bzero(splitbuf,1024);
 
-				if (bcount = read(fd, data, 1024)) {
+				if ((bcount = read(fd, data, 1024))) {
 					for (i=0; i < bcount; i++) {
 						if (linebreak && oLineTimings) {
 							elapsedFromStart(&starttime, &elapsed);
