@@ -79,10 +79,10 @@ debug(int level, const char * template, ...)
 
   va_start (ap, template);
 
-	if (oDebug < level) return;
-	vfprintf(stderr, template, ap);
-	fprintf(stderr,"\n");
-	fflush(stderr);
+  if (oDebug < level) return;
+  vfprintf(stderr, template, ap);
+  fprintf(stderr,"\n");
+  fflush(stderr);
 
   va_end (ap);
 
@@ -110,25 +110,25 @@ boolean_t
 serialInitPort(int fd, int baudrate) 
 {
 
-	// use :   fd = open(port, O_RDWR | O_NOCTTY);
+  // use :   fd = open(port, O_RDWR | O_NOCTTY);
 
-	struct termios options;
+  struct termios options;
 
   debug(LOG_DEBUG,"Setting port attributes");
 
-	/* Get the current options for the port */
-	tcgetattr(fd, &options);
+  /* Get the current options for the port */
+  tcgetattr(fd, &options);
 
-	/* Set the baud rates to BAUDRATE */
+  /* Set the baud rates to BAUDRATE */
   if (cfsetispeed(&options, baudrate) == -1) {
     debug(LOG_WARNING,"cfsetispeed error for baudrate %d", baudrate);
-		return FALSE;
-	}
+    return FALSE;
+  }
 
-	if (cfsetospeed(&options, baudrate)) {
+  if (cfsetospeed(&options, baudrate)) {
     debug(LOG_WARNING,"cfsetospeed error for baudrate %d", baudrate);
-		return FALSE;
-	}
+    return FALSE;
+  }
 
   /* 8N1 */
   options.c_cflag &= ~PARENB;
@@ -153,8 +153,8 @@ serialInitPort(int fd, int baudrate)
   options.c_cc[VMIN]   = 1; 
   options.c_cc[VTIME]  = 0; 
   
-	/* Apply the new options for the port */
-	tcsetattr(fd, TCSANOW, &options);
+  /* Apply the new options for the port */
+  tcsetattr(fd, TCSANOW, &options);
 
   return TRUE;
 }
@@ -177,60 +177,60 @@ int
 serialOpen(const char *port, int baudrate) {
   int baud_sym;
 
-	int fd = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
-	//	fcntl(fd, F_SETFL, FNDELAY);
+  int fd = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
+  //  fcntl(fd, F_SETFL, FNDELAY);
 
   debug(LOG_DEBUG,"Opening port %s...", port);
 
   if (fd == -1) {
-		debug(LOG_ALERT,"error: port %s opening failed. Permission problem ?", port);
+    debug(LOG_ALERT,"error: port %s opening failed. Permission problem ?", port);
     exit(EXIT_FAILURE);
   } 
 
-	fcntl(fd, F_SETFL, 0);
+  fcntl(fd, F_SETFL, 0);
   debug(LOG_INFO,"Port %s opened successfuly", port);
 
   /* Set port attributes (baudrate only) */
-	// Check that argv[argc-1] 
-	switch (baudrate) {
-	case 50: baud_sym = B50; break;
-	case 75: baud_sym = B75; break;
-	case 110: baud_sym = B110; break;
-	case 134: baud_sym = B134; break;
-	case 150: baud_sym = B150; break;
-	case 200: baud_sym = B200; break;
-	case 300: baud_sym = B300; break;
-	case 600: baud_sym = B600; break;
-	case 1200: baud_sym = B1200; break;
-	case 1800: baud_sym = B1800; break;
-	case 2400: baud_sym = B2400; break;
-	case 4800: baud_sym = B4800; break;
-	case 9600: baud_sym = B9600; break;
-	case 19200: baud_sym = B19200; break;
-	case 38400: baud_sym = B38400; break;
-	case 57600: baud_sym = B57600; break;
-	case 115200: baud_sym = B115200; break;
-	case 230400: baud_sym = B230400; break;
-	case 460800: baud_sym =  B460800; break;
-	case 500000: baud_sym =  B500000; break;
-	case 576000: baud_sym =  B576000; break;
-	case 921600: baud_sym =  B921600; break;
-	case 1000000: baud_sym =  B1000000; break;
-	case 1152000: baud_sym =  B1152000; break;
-	case 1500000: baud_sym =  B1500000; break;
-	case 2000000: baud_sym =  B2000000; break;
-	case 2500000: baud_sym =  B2500000; break;
-	case 3000000: baud_sym =  B3000000; break;
-	case 3500000: baud_sym =  B3500000; break;
-	case 4000000: baud_sym =  B4000000; break;
-	default: printf("Error : unsupported baud rate"); exit(EXIT_FAILURE);
-	}
+  // Check that argv[argc-1] 
+  switch (baudrate) {
+  case 50: baud_sym = B50; break;
+  case 75: baud_sym = B75; break;
+  case 110: baud_sym = B110; break;
+  case 134: baud_sym = B134; break;
+  case 150: baud_sym = B150; break;
+  case 200: baud_sym = B200; break;
+  case 300: baud_sym = B300; break;
+  case 600: baud_sym = B600; break;
+  case 1200: baud_sym = B1200; break;
+  case 1800: baud_sym = B1800; break;
+  case 2400: baud_sym = B2400; break;
+  case 4800: baud_sym = B4800; break;
+  case 9600: baud_sym = B9600; break;
+  case 19200: baud_sym = B19200; break;
+  case 38400: baud_sym = B38400; break;
+  case 57600: baud_sym = B57600; break;
+  case 115200: baud_sym = B115200; break;
+  case 230400: baud_sym = B230400; break;
+  case 460800: baud_sym =  B460800; break;
+  case 500000: baud_sym =  B500000; break;
+  case 576000: baud_sym =  B576000; break;
+  case 921600: baud_sym =  B921600; break;
+  case 1000000: baud_sym =  B1000000; break;
+  case 1152000: baud_sym =  B1152000; break;
+  case 1500000: baud_sym =  B1500000; break;
+  case 2000000: baud_sym =  B2000000; break;
+  case 2500000: baud_sym =  B2500000; break;
+  case 3000000: baud_sym =  B3000000; break;
+  case 3500000: baud_sym =  B3500000; break;
+  case 4000000: baud_sym =  B4000000; break;
+  default: printf("Error : unsupported baud rate"); exit(EXIT_FAILURE);
+  }
 
-	serialInitPort(fd, baud_sym);
+  serialInitPort(fd, baud_sym);
 
   debug(LOG_INFO,"Baudrate set successfuly to %d", baudrate);
 
-	return fd;
+  return fd;
 }
 
 /**
@@ -275,16 +275,16 @@ usage(void)
 int
 elapsedFromStart (struct timeval *starttime, struct timeval *result) {
 
-	struct timeval now;
-	gettimeofday(&now, NULL);
+  struct timeval now;
+  gettimeofday(&now, NULL);
 
   result->tv_sec = now.tv_sec - starttime->tv_sec;
-	result->tv_usec = now.tv_usec - starttime->tv_usec;
+  result->tv_usec = now.tv_usec - starttime->tv_usec;
 
-	if (result->tv_usec < 0) {
-		result->tv_sec -= 1;
-		result->tv_usec += 1000000;
-	}
+  if (result->tv_usec < 0) {
+    result->tv_sec -= 1;
+    result->tv_usec += 1000000;
+  }
 
   /* Return 1 if result is negative. */
   return now.tv_sec < starttime->tv_sec;
@@ -304,72 +304,72 @@ elapsedFromStart (struct timeval *starttime, struct timeval *result) {
  */
 void 
 serialLoop(const char *serialPort, int baudRate) {
-	int            fd;
-	char           data[1024];
-	char           splitbuf[1024];
-	int            n;
-	int            nbytes;
-	int            max_fd;
-	fd_set         input;
-	struct timeval timeout;
-	boolean_t      linebreak = FALSE;
-	int            i;
-	int            bcount;
-	struct timeval elapsed;
-	struct timeval starttime;
+  int            fd;
+  char           data[1024];
+  char           splitbuf[1024];
+  int            n;
+  int            nbytes;
+  int            max_fd;
+  fd_set         input;
+  struct timeval timeout;
+  boolean_t      linebreak = FALSE;
+  int            i;
+  int            bcount;
+  struct timeval elapsed;
+  struct timeval starttime;
 
-	fd = serialOpen(serialPort, baudRate);
-	
-	/* Initialize the input set */
-	FD_ZERO(&input);
+  fd = serialOpen(serialPort, baudRate);
+  
+  /* Initialize the input set */
+  FD_ZERO(&input);
 
-	gettimeofday(&starttime, NULL);
+  gettimeofday(&starttime, NULL);
 
-	while (1) {
-		FD_SET(fileno(stdin), &input); // stdin
-		FD_SET(fd, &input);
-		
-		max_fd = fd + 1;
-		
-		/* Initialize the timeout structure */
-		timeout.tv_sec  = 10;
-		timeout.tv_usec = 0;
-		
-		/* Do the select */
-		n = select(max_fd, &input, NULL, NULL, &timeout);
+  while (1) {
+    FD_SET(fileno(stdin), &input); // stdin
+    FD_SET(fd, &input);
+    
+    max_fd = fd + 1;
+    
+    /* Initialize the timeout structure */
+    timeout.tv_sec  = 10;
+    timeout.tv_usec = 0;
+    
+    /* Do the select */
+    n = select(max_fd, &input, NULL, NULL, &timeout);
 
-		/* See if there was an error */
-		if (n < 0) {
-			debug(LOG_DEBUG, "select critical");
-			perror("select failed");
-		}	else if (n == 0) {
-			debug(LOG_DEBUG, "select timeout");
-		} else {
-			/* We have input */
-			if (FD_ISSET(fd, &input)) {
+    /* See if there was an error */
+    if (n < 0) {
+      debug(LOG_DEBUG, "select critical");
+      perror("select failed");
+    } else if (n == 0) {
+      debug(LOG_DEBUG, "select timeout");
+    } else {
+      /* We have input */
+      if (FD_ISSET(fd, &input)) {
 
-				bzero(data,1024);
-				bzero(splitbuf,1024);
+        bzero(data,1024);
+        bzero(splitbuf,1024);
 
-				if ((bcount = read(fd, data, 1024))) {
-					for (i=0; i < bcount; i++) {
-						if (linebreak && oLineTimings) {
-							elapsedFromStart(&starttime, &elapsed);
-							printf("[%ld.%06ld]", elapsed.tv_sec, elapsed.tv_usec);
-						}
-						linebreak = (data[i] == '\n' ? TRUE : FALSE);
-						printf("%c", data[i]);
-						fflush(stdout);
-					}
-				}
-			}
-			if (FD_ISSET(0, &input)) {
-				bzero(data,1024);
-				nbytes = read(fileno(stdin), data, 1024);
-				write(fd, data, nbytes);
-			}
-		}
-	}
+        if ((bcount = read(fd, data, 1024))) {
+          for (i=0; i < bcount; i++) {
+            if (linebreak && oLineTimings) {
+              elapsedFromStart(&starttime, &elapsed);
+              printf("[%ld.%06ld]", elapsed.tv_sec, elapsed.tv_usec);
+            }
+            linebreak = (data[i] == '\n' ? TRUE : FALSE);
+            printf("%c", data[i]);
+            fflush(stdout);
+          }
+        }
+      }
+      if (FD_ISSET(0, &input)) {
+        bzero(data,1024);
+        nbytes = read(fileno(stdin), data, 1024);
+        write(fd, data, nbytes);
+      }
+    }
+  }
 }
 
 /**
@@ -383,11 +383,11 @@ int
 main(int argc, char **argv)
 {
   char c;
-	int  oSerialBaudRate = 0;
+  int  oSerialBaudRate = 0;
 
   /* thread stuff */
   while ((c = getopt(argc, argv, "hg::b:t")) != -1 ) {
-		debug(LOG_DEBUG, "handling option %c",c);
+    debug(LOG_DEBUG, "handling option %c",c);
     switch (c) {
     case 'g':
       oDebug = atoi(optarg);
@@ -410,20 +410,20 @@ main(int argc, char **argv)
     }
   }
 
-	if (!oSerialBaudRate) {
-	  debug(LOG_NOTICE, "baud rate unspecified, using 9600");
-		oSerialBaudRate = 9600;
-	}
+  if (!oSerialBaudRate) {
+    debug(LOG_NOTICE, "baud rate unspecified, using 9600");
+    oSerialBaudRate = 9600;
+  }
 
   debug(LOG_DEBUG, "finished handling options");
 
-	if (!strstr(argv[argc-1],"/dev/tty")) {
-		debug(LOG_WARNING, "invalid serial port specified : %s", argv[argc-1]);
-	}
-	
-	serialLoop(argv[argc-1], oSerialBaudRate);
+  if (!strstr(argv[argc-1],"/dev/tty")) {
+    debug(LOG_WARNING, "invalid serial port specified : %s", argv[argc-1]);
+  }
+  
+  serialLoop(argv[argc-1], oSerialBaudRate);
 
-	return 0;
+  return 0;
 }
 
 /** @mainpage cats Documentation
@@ -450,8 +450,8 @@ dependencies.
  * -g <0-7> : debug level (default : no debug, see sys/syslog.h for levels)
  *
  * The list of supported baud rates is rather extensive, but mignt not cover all cases. For instance, playing with MIDI (31250) is not supported for now, but since MIDI is a binary protocol, it's not a problem right now.
- *	50 75 110 134 150 200 300 600 1200 1800 2400 4800 9600 19200 38400 57600 115200 230400
- *	230400 460800 500000 576000 921600 1000000 1152000 1500000 2000000 2500000 3000000 3500000 4000000
+ *  50 75 110 134 150 200 300 600 1200 1800 2400 4800 9600 19200 38400 57600 115200 230400
+ *  230400 460800 500000 576000 921600 1000000 1152000 1500000 2000000 2500000 3000000 3500000 4000000
  *
  * @section usage Usage Exemples
  *
