@@ -244,7 +244,7 @@ void
 usage(void)
 {
   fprintf(stdout, "cats, version %.2f\n\n",VERSION);
-  fprintf(stdout, "  Usage : cats [-h] [-g <0-7>] [-b <baud>]<port>\n\n");
+  fprintf(stdout, "  Usage : cats [-h] [-g <0-7>] [-b <baud>] [-t] <port>\n\n");
 
   fprintf(stderr, "\t-h : this help\n");
   fprintf(stderr, "\t<port> : serial port (default : none\n");
