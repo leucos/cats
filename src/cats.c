@@ -56,7 +56,7 @@
 #  endif
 #endif
 
-int            oDebug = 0;
+int            oDebug = 2;
 boolean_t      oLineTimings = FALSE;
 struct timeval oStartTime;
 
