@@ -247,7 +247,7 @@ usage(void)
   fprintf(stdout, "  Usage : cats [-h] [-g <0-7>] [-b <baud>] [-t] <port>\n\n");
 
   fprintf(stderr, "\t-h : this help\n");
-  fprintf(stderr, "\t<port> : serial port (default : none\n");
+  fprintf(stderr, "\t<port> : serial port (default : none)\n");
   fprintf(stderr, "\t-b <rate> : serial baud rate (default : 9600)\n");
   fprintf(stderr, "\t-t : write timestamp in front on each line\n");
   fprintf(stderr, "\t-g <0-7> : debug level (default : no debug, see sys/syslog.h for levels)\n");
@@ -259,6 +259,8 @@ usage(void)
   fprintf(stderr, "\n  Example : cats -g7 -b19200 /dev/ttyUSB0\n");
 
   fprintf(stderr,"\n");
+
+  exit(EXIT_SUCCESS);
 }
 
 /**
@@ -385,6 +387,9 @@ main(int argc, char **argv)
   char c;
   int  oSerialBaudRate = 0;
 
+  if (argc == 1)
+    usage();
+
   /* thread stuff */
   while ((c = getopt(argc, argv, "hg::b:t")) != -1 ) {
     debug(LOG_DEBUG, "handling option %c",c);
@@ -406,7 +411,6 @@ main(int argc, char **argv)
     case 'h':
     default:
       usage();
-      exit(EXIT_SUCCESS);
     }
   }
 
